@@ -8,6 +8,9 @@
       <el-form-item>
         <el-input type="password" v-model="loginForm.password" placeholder="密码"></el-input>
       </el-form-item>
+      <el-form-item style="color:red">
+        <span>{{ loginState.mes }}</span>
+      </el-form-item>
       <el-form-item style="text-align: center;width: 100%" size="large">
         <el-button class="login-button" @click="login">登录</el-button>
         <el-button class="login-button">注册</el-button>
@@ -27,25 +30,28 @@ export default {
       loginForm: {
         username: '',
         password: ''
+      },
+      loginState: {
+        mes:'\u2002'
       }
     }
   },
   methods: {
     login() {
+      const _this = this;
       this.$axios
           .post('/login', {
             username: this.loginForm.username,
             password: this.loginForm.password
           })
           .then(function (response) {
-            if (response.data === 1 && response.status === 200) {
-              console.log("登录成功")
+            if (response.data === 1) {
+              _this.$set(_this.loginState,"mes","登录成功")
             } else if(response.data === -1){
-              console.log("密码错误")
+              _this.$set(_this.loginState,"mes","用户名或密码错误！")
+            } else if (response.data === 0){
+              _this.$set(_this.loginState,"mes","用户不存在！")
             }
-          })
-          .catch(function () {
-            console.log("连接失败")
           })
     }
   }
@@ -63,7 +69,7 @@ body {
   position: absolute;
   left: 0;
   top: 0;
-  background: url("../assets/img/pid-83928679.jpg") no-repeat;
+  background: url("../../assets/img/pid-83928679.jpg") no-repeat;
 }
 
 .login_container {
