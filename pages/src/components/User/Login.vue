@@ -1,6 +1,6 @@
 <template>
   <div id="login_form">
-    <el-form label-width="auto" class="login_container">
+    <el-form label-width="auto" class="form_container">
       <h3>登录微博</h3>
       <el-form-item>
         <el-input type="text" v-model="loginForm.username" placeholder="用户名"></el-input>
@@ -8,12 +8,9 @@
       <el-form-item>
         <el-input type="password" v-model="loginForm.password" placeholder="密码"></el-input>
       </el-form-item>
-      <el-form-item style="color:red">
-        <span>{{ loginState.mes }}</span>
-      </el-form-item>
       <el-form-item style="text-align: center;width: 100%" size="large">
-        <el-button class="login-button" @click="login">登录</el-button>
-        <el-button class="login-button">注册</el-button>
+        <el-button type="primary" class="login-button" @click="login">登录</el-button>
+        <el-button class="login-button" @click="register">注册</el-button>
       </el-form-item>
       <el-form-item>
         <el-button class="login-button">游客访问</el-button>
@@ -23,6 +20,8 @@
 </template>
 
 <script>
+import router from "@/route";
+
 export default {
   name: "Login",
   data() {
@@ -31,28 +30,32 @@ export default {
         username: '',
         password: ''
       },
-      loginState: {
-        mes:'\u2002'
-      }
+
     }
   },
   methods: {
     login() {
-      const _this = this;
       this.$axios
           .post('/login', {
             username: this.loginForm.username,
             password: this.loginForm.password
           })
-          .then(function (response) {
+          .then(response => {
             if (response.data === 1) {
-              _this.$set(_this.loginState,"mes","登录成功")
-            } else if(response.data === -1){
-              _this.$set(_this.loginState,"mes","用户名或密码错误！")
-            } else if (response.data === 0){
-              _this.$set(_this.loginState,"mes","用户不存在！")
+              this.$message.success("登录成功！")
+              //之后跳转到首页
+            } else if (response.data === -1) {
+              this.$message.error("密码错误，请重试！")
+            } else if (response.data === 0) {
+              this.$message.warning("用户名不存在！")
             }
           })
+          .catch(()=>{
+            this.$message.error("网络连接失败")
+          })
+    },
+    register() {
+      router.push({name:'register'})
     }
   }
 }
@@ -72,7 +75,7 @@ body {
   background: url("../../assets/img/pid-83928679.jpg") no-repeat;
 }
 
-.login_container {
+.form_container {
   border-radius: 15px;
   background-clip: padding-box;
   margin: 90px auto;
@@ -83,7 +86,7 @@ body {
   box-shadow: 0 0 35px #cac6c6;
 }
 
-.login_container h3 {
+.form_container h3 {
   margin: 0 auto 40px auto;
   text-align: center;
   color: #505458;
@@ -91,6 +94,5 @@ body {
 
 .login-button {
   margin: 0 auto;
-  background: #eaeaea;
 }
 </style>
