@@ -1,6 +1,6 @@
 # Demoblog
 
-结合Spring boot和Vue.js的小项目
+结合Spring boot和Vue.js的小项目，还在建设中
 
 **前端技术栈：**
 
