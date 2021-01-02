@@ -1,14 +1,13 @@
 package com.example.demoblog.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import lombok.Data;
+
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
+@Data
 public class User  {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
@@ -18,7 +17,11 @@ public class User  {
     private String email;
     private Timestamp create_time;
 
-    public User() {
+    @OneToOne(cascade = CascadeType.ALL)
+    private UserInfo userinfo;
+
+
+    public User(){
     }
 
 
@@ -65,4 +68,15 @@ public class User  {
     public void setCreate_time(Timestamp create_time) {
         this.create_time = create_time;
     }
+
+    public UserInfo getUserinfo() {
+        return userinfo;
+    }
+
+    public void setUserinfo(UserInfo userinfo) {
+        this.userinfo = userinfo;
+    }
 }
+
+
+
