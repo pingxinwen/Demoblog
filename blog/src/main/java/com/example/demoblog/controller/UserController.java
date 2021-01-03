@@ -36,8 +36,10 @@ public class UserController {
         } else {
             if (user.checkPassword(password)) {
                 mes.put("state", "OK");//正确
-                UserInfo info = userInfoRepository.findByUsername(user.getName());
+                UserInfo info = user.getUserinfo();
                 mes.put("info", info);
+                mes.put("username",username);
+                System.out.println(mes.toString());
             }
             else
                 mes.put("state", "Wrong password"); //错误密码
@@ -52,10 +54,6 @@ public class UserController {
         String password = object.getString("password");
         String checkPass = object.getString("checkPassword");
         String email = object.getString("email");
-        String birth = object.getString("birth");
-        String sex = object.getString("sex");
-        String signature = object.getString("signature");
-        String special_name = object.getString("special_name");
 
         JSONObject mes = new JSONObject();
         if (username == null || password == null || checkPass == null || email == null) {
@@ -68,12 +66,9 @@ public class UserController {
         } else {
             User user = new User();
             UserInfo userinfo = new UserInfo();
-            userinfo.setBirth(birth);
-            userinfo.setSex(sex);
-            userinfo.setSignature(signature);
-            userinfo.setSpecial_name(special_name);
+            userinfo.setUsername(username);
+            userinfo.setUser(user);
             userInfoRepository.save(userinfo);
-
             user.setName(username);
             user.setPassword(password);
             user.setEmail(email);
