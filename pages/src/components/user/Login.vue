@@ -8,7 +8,7 @@
       <el-form-item>
         <el-input type="password" v-model="loginForm.password" placeholder="密码"></el-input>
       </el-form-item>
-      <el-form-item style="text-align: center;width: 100%" size="large">
+      <el-form-item style="width: 100%" size="large">
         <el-button type="primary" class="login-button" @click="login">登录</el-button>
         <el-button class="login-button" @click="register">注册</el-button>
       </el-form-item>
@@ -41,12 +41,22 @@ export default {
             password: this.loginForm.password
           })
           .then(response => {
-            if (response.data === 1) {
+            if (response.data.state === 'OK') {
               this.$message.success("登录成功！")
+              //存储用户信息
+              if(response.data.info!=null)
+                this.$store.commit('login',{
+                  username: response.data.username,
+                  uname:response.data.info.username
+              })
               //之后跳转到首页
-            } else if (response.data === -1) {
+              setTimeout(()=>{
+                if(this.$router.history)
+                this.$router.push('/home')
+              },3000)
+            } else if (response.data.state === 'Not exist') {
               this.$message.error("密码错误，请重试！")
-            } else if (response.data === 0) {
+            } else if (response.data.state === 'Wrong password') {
               this.$message.warning("用户名不存在！")
             }
           })
@@ -72,7 +82,6 @@ body {
   position: absolute;
   left: 0;
   top: 0;
-  background: url("../../assets/img/pid-83928679.jpg") no-repeat;
 }
 
 .form_container {
@@ -93,6 +102,7 @@ body {
 }
 
 .login-button {
-  margin: 0 auto;
+  margin: 0 30px;
 }
+
 </style>
