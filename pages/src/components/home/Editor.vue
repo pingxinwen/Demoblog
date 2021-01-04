@@ -20,21 +20,22 @@
         </el-col>
         <el-col :span="3">
           <div style="margin: auto 10px auto 0">
-            <el-button type="primary" size="small" class="submit" icon="el-icon-upload2">提交</el-button>
+            <el-button type="primary" size="small" class="submit" icon="el-icon-upload2" @click="post_blog">提交
+            </el-button>
           </div>
         </el-col>
       </el-row>
     </div>
-      <el-upload
-          v-show="show_image_upload"
-          action="#"
-          :auto-upload="false"
-          :limit="9"
-          multiple
-          :file-list="pic_list"
-          list-type="picture-card">
-        <div>点击上传图片</div>
-      </el-upload>
+    <el-upload
+        v-show="show_image_upload"
+        action="#"
+        :auto-upload="false"
+        :limit="9"
+        multiple
+        :file-list="pic_list"
+        list-type="picture-card">
+      <div>点击上传图片</div>
+    </el-upload>
   </div>
 </template>
 
@@ -48,10 +49,28 @@ export default {
       show_image_upload: false
     }
   },
-  methods:{
-    change_upload:function () {
+  methods: {
+    change_upload() {
       this.show_image_upload = !this.show_image_upload
-      console.log(this.show_image_upload)
+    },
+    post_blog() {
+      if (this.text_raw.length > 140) {
+        this.$message.error('字数超出限制')
+      } else {
+        this.$axios.post('/blog', {
+          username: this.$store.state.user.username,
+          content: this.text_raw,
+          imgUrls: this.pic_list
+        }).then(response => {
+          if (response.data.state === 'OK') {
+            this.$message.success('发布成功')
+          } else {
+            this.$message.error('发布失败')
+          }
+        }).catch(() => {
+          this.$message.error('网络连接失败')
+        })
+      }
     }
   }
 }

@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Data
@@ -20,6 +21,8 @@ public class User  {
     @OneToOne(cascade = CascadeType.ALL)
     private UserInfo userinfo;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Blog> blog;
 
     public User(){
     }

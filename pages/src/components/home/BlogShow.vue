@@ -36,7 +36,7 @@ export default {
         content: '测试用正文',
         imgUrls: ['https://pic4.zhimg.com/80/v2-fa7a5f8d52a41060c2c0b66ca2bb37fb_720w.jpg?source=3af55fa1'],
         comments: [],
-        thumb: 0
+        likes: 0
       }, {
         id:1,
         uname: '测试2',
@@ -44,7 +44,7 @@ export default {
         content: '测试用正文',
         imgUrls: ['https://pic4.zhimg.com/80/v2-fa7a5f8d52a41060c2c0b66ca2bb37fb_720w.jpg?source=3af55fa1'],
         comments: [],
-        thumb: 0
+        likes: 0
       }]
     }
   },
