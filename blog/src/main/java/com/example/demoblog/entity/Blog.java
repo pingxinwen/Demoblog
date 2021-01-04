@@ -14,7 +14,7 @@ public class Blog {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnore
     private User user;
 
@@ -26,22 +26,23 @@ public class Blog {
     private String username;
     private Timestamp time;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Image> image;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Comment> comments;
-    private int comment_num;
 
-    @OneToMany
+    private int commentNum;
+
+    @OneToMany(cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Thumb> thumbs;
     private int likes;
     @Transient
-    private boolean is_like;
+    private boolean like;
 
     public Blog(){
-        this.comment_num=0;
+        this.commentNum=0;
         this.likes=0;
     }
 }

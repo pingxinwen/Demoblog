@@ -1,7 +1,7 @@
 <template>
   <div id="home">
     <Editor></Editor>
-    <BlogShow></BlogShow>
+    <BlogShow ref="ChildUpdate"></BlogShow>
   </div>
 </template>
 
@@ -10,7 +10,12 @@ import Editor from "@/components/home/Editor";
 import BlogShow from "@/components/home/BlogShow";
 export default {
   name: "Home",
-  components: {BlogShow, Editor}
+  components: {BlogShow, Editor},
+  methods:{
+    flush(){
+      this.$refs.childUpdate.getBlog()
+    }
+  }
 }
 </script>
 

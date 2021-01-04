@@ -6,6 +6,7 @@ import com.example.demoblog.dao.BlogRepository;
 import com.example.demoblog.dao.UserRepository;
 import com.example.demoblog.entity.Blog;
 import com.example.demoblog.entity.Image;
+import com.example.demoblog.entity.Thumb;
 import com.example.demoblog.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -65,34 +66,62 @@ public class BlogController {
         newBlog.setTime(new Timestamp(System.currentTimeMillis()));
         blogRepository.save(newBlog);
         mes.put("state","OK");
+        mes.put("blog",newBlog);
         return mes ;
     }
 
     @GetMapping("")
-    public JSONObject getALLBlog(@RequestParam(required = false,defaultValue = "0") int page){
+    public JSONObject getALLBlog(@RequestParam(required = false,defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "time") String type,
+                                 @RequestParam(required = false,defaultValue = "")String username){
         page = page<0?0:page;
-        Sort sort = Sort.by(Sort.Direction.DESC,"time");
+        Sort sort = Sort.by(Sort.Direction.DESC,type);
         Pageable pageable = PageRequest.of(page,2,sort);
         Page<Blog> blogs = blogRepository.findAll(pageable);
+        User requestUser = userRepository.findByName(username);
         for (Blog blog :blogs.getContent()){
-            blog.setUname(blog.getUser().getName());
-            blog.setUname(blog.getUser().getUserinfo().getUname());
+            User user = blog.getUser();
+            //System.out.println(user.getName()+"\t"+user.getUserinfo().getUname());
+            blog.setUsername(user.getName());
+            blog.setUname(user.getUserinfo().getUname());
+            if(requestUser!=null){
+                for(Thumb thumb:blog.getThumbs()){
+                    if (thumb.getUser().equals(user)){
+                        blog.setLike(true);
+                        break;
+                    }
+                }
+            }
         }
         JSONObject mes = new JSONObject();
         mes.put("blogs",blogs);
         return mes;
     }
+
     @GetMapping("/user")
     public JSONObject getBlogByName(@RequestParam(defaultValue = "")String username,
                                     @RequestParam(defaultValue = "0")int page,
                                     @RequestParam(defaultValue = "time")String type){
         page = page<0?0:page;
+        System.out.println(type);
         Sort sort = Sort.by(Sort.Direction.DESC,type);
         Pageable pageable = PageRequest.of(page,2,sort);
         JSONObject mes = new JSONObject();
         if(username!=null&&!username.equals("")){
             User user = userRepository.findByName(username);
             Page<Blog> blogs = blogRepository.findByUser(user,pageable);
+            for(Blog blog :blogs.getContent()){
+                User user1 = blog.getUser();
+                //System.out.println(user1.getName()+"\t"+user1.getUserinfo().getUname());
+                blog.setUsername(user1.getName());
+                blog.setUname(user1.getUserinfo().getUname());
+                for(Thumb thumb:blog.getThumbs()){
+                    if (thumb.getUser().equals(user)){
+                        blog.setLike(true);
+                        break;
+                    }
+                }
+            }
             mes.put("state","OK");
             mes.put("content",blogs);
         }

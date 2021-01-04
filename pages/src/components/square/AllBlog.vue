@@ -19,7 +19,7 @@
     ></blog-item>
     <el-pagination
         :current-page="pages"
-        @current-change="getnew"
+        @current-change="getNew"
         background
         layout="prev,pager,next"
         :page-count="page_limit"></el-pagination>
@@ -30,7 +30,7 @@
 import BlogItem from "@/components/common/BlogItem";
 
 export default {
-  name: "BlogShow",
+  name: "AllBlog",
   components: {BlogItem},
   mounted() {
     this.getBlog('time')
@@ -49,30 +49,26 @@ export default {
       if (command !== this.command_now) {
         this.blog_data.splice(0, this.blog_data.length)
         this.command_now = command
-        // if(this.pages!==1)
-        //   this.pages=1
         this.getBlog(this.command_now)
       }
     },
     getBlog(command) {
       console.log(this.pages)
-      this.$axios.get("/blog/user", {
+      this.$axios.get("/blog", {
         params: {
-          username: this.$store.state.user.username,
-          page: this.pages-1,
-          type: command
+          page: this.pages - 1,
+          type: command,
+          username:this.$store.state.user.username
         }
-      })
-          .then(response => {
-            this.blog_data = response.data.content.content
-            //this.pages = response.data.content.number
-            this.page_limit = response.data.content.totalPages
-          })
-          .catch(() => {
+      }).then(response => {
+        this.blog_data = response.data.blogs.content
+        //this.pages = response.data.content.number
+        this.page_limit = response.data.blogs.totalPages
+      }).catch(() => {
             this.$message.error("网络故障")
-          })
+      })
     },
-    getnew(val){
+    getNew(val) {
       this.pages = val
       this.getBlog(this.command_now)
     }
@@ -88,5 +84,4 @@ export default {
   vertical-align: center;
   text-align: right;
 }
-
 </style>

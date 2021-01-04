@@ -3,7 +3,7 @@
     <el-input
         type="textarea"
         :rows="5"
-        placholder="随时随地写入你的新想法！"
+        placeholder="随时随地写入你的新想法！"
         v-model="text_raw"
         resize="none"
         style="">
@@ -64,6 +64,8 @@ export default {
         }).then(response => {
           if (response.data.state === 'OK') {
             this.$message.success('发布成功')
+            // this.$router.push('/home')
+            this.$emit('flush')
           } else {
             this.$message.error('发布失败')
           }

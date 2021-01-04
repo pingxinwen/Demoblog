@@ -11,9 +11,9 @@ public class Thumb {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Blog blog;
 
-    @OneToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private User user;
 }

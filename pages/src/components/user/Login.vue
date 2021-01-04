@@ -52,8 +52,8 @@ export default {
               //之后跳转到首页
               setTimeout(()=>{
                 if(this.$router.history)
-                this.$router.push('/home')
-              },3000)
+                this.$router.replace('/home')
+              },1000)
             } else if (response.data.state === 'Not exist') {
               this.$message.error("密码错误，请重试！")
             } else if (response.data.state === 'Wrong password') {
